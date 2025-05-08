@@ -1,5 +1,6 @@
 
 import React, { useEffect, useRef } from 'react';
+import { Shield, Smile, FileImage, Globe, PhoneCall, Users } from 'lucide-react';
 
 interface ServiceCardProps {
   icon: React.ReactNode;
@@ -21,7 +22,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ icon, title, description, del
           }, delay);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
     );
     
     if (cardRef.current) {
@@ -38,11 +39,18 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ icon, title, description, del
   return (
     <div 
       ref={cardRef}
-      className="service-card opacity-0 translate-y-10 transition-all duration-700 ease-out"
+      className="service-card opacity-0 translate-y-10 transition-all duration-700 ease-out group hover:border-dental-primary"
     >
-      <div className="mb-4 text-dental-primary">{icon}</div>
-      <h3 className="heading-sm mb-3">{title}</h3>
+      <div className="mb-6 text-dental-primary group-hover:scale-110 transform transition-transform duration-300">
+        <div className="w-16 h-16 rounded-full bg-dental-accent flex items-center justify-center group-hover:bg-dental-primary group-hover:text-white transition-all duration-300">
+          {icon}
+        </div>
+      </div>
+      <h3 className="heading-sm mb-3 group-hover:text-dental-primary transition-colors duration-300">{title}</h3>
       <p className="text-gray-600">{description}</p>
+      <div className="mt-4 overflow-hidden h-0.5">
+        <div className="w-full h-full bg-dental-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
+      </div>
     </div>
   );
 };
@@ -50,46 +58,89 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ icon, title, description, del
 const ServicesSection = () => {
   const services = [
     {
-      icon: <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18.94V22"></path></svg>,
+      icon: <Shield size={28} />,
       title: "Regular Checkups",
       description: "Comprehensive dental examinations to maintain oral health and prevent future problems."
     },
     {
-      icon: <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"></path></svg>,
+      icon: <Smile size={28} />,
       title: "Cosmetic Dentistry",
       description: "Transform your smile with our range of cosmetic treatments including teeth whitening and veneers."
     },
     {
-      icon: <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>,
+      icon: <Globe size={28} />,
       title: "Orthodontics",
       description: "Straighten your teeth with our modern orthodontic treatments including invisible aligners."
     },
     {
-      icon: <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 18a4 4 0 0 1-8 0"></path><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M3 12h3M21 12h-3M12 19v3M19 7l-3 3M8 20l3-3M4 8l3 3M3 4l7 7"></path></svg>,
+      icon: <FileImage size={28} />,
       title: "Dental Implants",
       description: "Restore missing teeth with durable, natural-looking implants for a complete smile."
     },
     {
-      icon: <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>,
+      icon: <PhoneCall size={28} />,
       title: "Emergency Care",
       description: "Immediate dental care when you need it most with our responsive emergency services."
     },
     {
-      icon: <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>,
+      icon: <Users size={28} />,
       title: "Pediatric Dentistry",
       description: "Specialized dental care for children in a friendly and comfortable environment."
     }
   ];
 
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          titleRef.current?.classList.add('opacity-100', 'translate-y-0');
+          titleRef.current?.classList.remove('opacity-0', 'translate-y-10');
+          
+          setTimeout(() => {
+            descRef.current?.classList.add('opacity-100', 'translate-y-0');
+            descRef.current?.classList.remove('opacity-0', 'translate-y-10');
+          }, 200);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+    
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <section id="services" className="py-20 bg-dental-accent">
-      <div className="section-container">
-        <div className="text-center mb-16">
-          <h2 className="heading-lg mb-4">Our Services</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+    <section id="services" className="py-24 bg-dental-accent relative" ref={sectionRef}>
+      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white to-transparent"></div>
+      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-white to-transparent"></div>
+      
+      <div className="section-container relative">
+        <div className="flex flex-col items-center text-center mb-20">
+          <h2 
+            ref={titleRef}
+            className="heading-lg mb-4 opacity-0 translate-y-10 transition-all duration-700 ease-out"
+          >
+            Our <span className="text-dental-primary">Premium</span> Services
+          </h2>
+          <p 
+            ref={descRef}
+            className="text-gray-600 max-w-2xl mx-auto opacity-0 translate-y-10 transition-all duration-700 ease-out delay-200"
+          >
             We offer a comprehensive range of dental services to meet all your oral health needs,
-            from routine checkups to specialized treatments.
+            from routine checkups to specialized treatments, all with exceptional care and attention to detail.
           </p>
+          <div className="w-24 h-1 bg-dental-primary mt-6"></div>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

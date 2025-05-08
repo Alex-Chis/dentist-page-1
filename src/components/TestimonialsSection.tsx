@@ -1,15 +1,7 @@
 
-import React, { useRef, useEffect, useState } from 'react';
-import { Quote } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext
-} from "@/components/ui/carousel";
-import { Star } from 'lucide-react';
 
 interface Testimonial {
   name: string;
@@ -51,11 +43,13 @@ const TestimonialsSection = () => {
     }
   ];
   
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const maxIndex = testimonials.length - 1;
+  const testimonialRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const carouselRef = useRef<any>(null);
   
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -85,17 +79,41 @@ const TestimonialsSection = () => {
       }
     };
   }, []);
-
-  // Auto-scroll functionality
+  
+  const nextSlide = () => {
+    if (isAnimating) return;
+    
+    setIsAnimating(true);
+    setCurrentIndex((prevIndex) => {
+      return prevIndex === maxIndex ? 0 : prevIndex + 1;
+    });
+  };
+  
+  const prevSlide = () => {
+    if (isAnimating) return;
+    
+    setIsAnimating(true);
+    setCurrentIndex((prevIndex) => {
+      return prevIndex === 0 ? maxIndex : prevIndex - 1;
+    });
+  };
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsAnimating(false);
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, [currentIndex]);
+  
+  // Auto-advance testimonials
   useEffect(() => {
     const interval = setInterval(() => {
-      if (carouselRef.current?.api) {
-        carouselRef.current.api.scrollNext();
-      }
-    }, 5000);
+      nextSlide();
+    }, 6000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [currentIndex]);
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }).map((_, index) => (
@@ -142,18 +160,20 @@ const TestimonialsSection = () => {
             <Quote size={80} className="text-dental-primary rotate-180" />
           </div>
           
-          <Carousel
-            ref={carouselRef}
-            opts={{ 
-              align: "start", 
-              loop: true,
-            }}
-            className="w-full"
+          <div 
+            ref={testimonialRef}
+            className="overflow-hidden"
           >
-            <CarouselContent>
+            <div 
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+            >
               {testimonials.map((testimonial, index) => (
-                <CarouselItem key={index} className="md:basis-1/1 lg:basis-1/1">
-                  <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-10 hover:shadow-dental-primary/10 transition-shadow duration-300 mx-4">
+                <div
+                  key={index}
+                  className="min-w-full px-4"
+                >
+                  <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-10 hover:shadow-dental-primary/10 transition-shadow duration-300">
                     <div className="flex flex-col md:flex-row gap-8 items-center">
                       <div className="w-28 h-28 rounded-full overflow-hidden shrink-0 border-4 border-dental-secondary shadow-lg">
                         <img 
@@ -174,35 +194,49 @@ const TestimonialsSection = () => {
                       </div>
                     </div>
                   </div>
-                </CarouselItem>
+                </div>
               ))}
-            </CarouselContent>
-            <div className="hidden md:block">
-              <CarouselPrevious className="left-0 -translate-x-1/2 bg-white text-dental-primary hover:bg-dental-primary hover:text-white" />
-              <CarouselNext className="right-0 translate-x-1/2 bg-white text-dental-primary hover:bg-dental-primary hover:text-white" />
             </div>
-          </Carousel>
-          
-          <div className="flex justify-center mt-8">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                aria-label={`Go to testimonial ${index + 1}`}
-                className={cn(
-                  "w-3 h-3 rounded-full mx-1 transition-all duration-300",
-                  index === activeIndex
-                    ? "bg-dental-primary w-8" 
-                    : "bg-gray-300 hover:bg-dental-secondary"
-                )}
-                onClick={() => {
-                  if (carouselRef.current?.api) {
-                    carouselRef.current.api.scrollTo(index);
-                    setActiveIndex(index);
-                  }
-                }}
-              />
-            ))}
           </div>
+          
+          <button 
+            onClick={prevSlide}
+            className="absolute top-1/2 -left-5 md:-left-10 transform -translate-y-1/2 bg-white rounded-full p-4 shadow-lg text-dental-primary hover:bg-dental-primary hover:text-white transition-colors disabled:opacity-50"
+            disabled={isAnimating}
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft size={24} />
+          </button>
+          
+          <button 
+            onClick={nextSlide}
+            className="absolute top-1/2 -right-5 md:-right-10 transform -translate-y-1/2 bg-white rounded-full p-4 shadow-lg text-dental-primary hover:bg-dental-primary hover:text-white transition-colors disabled:opacity-50"
+            disabled={isAnimating}
+            aria-label="Next testimonial"
+          >
+            <ChevronRight size={24} />
+          </button>
+        </div>
+        
+        <div className="flex justify-center mt-8">
+          {testimonials.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => {
+                if (!isAnimating) {
+                  setIsAnimating(true);
+                  setCurrentIndex(index);
+                }
+              }}
+              className={cn(
+                "w-3 h-3 rounded-full mx-1 transition-all duration-300",
+                currentIndex === index 
+                  ? "bg-dental-primary w-8" 
+                  : "bg-gray-300 hover:bg-dental-secondary"
+              )}
+              aria-label={`Go to testimonial ${index + 1}`}
+            />
+          ))}
         </div>
       </div>
     </section>

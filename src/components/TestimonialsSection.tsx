@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Quote } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -54,6 +54,8 @@ const TestimonialsSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const descRef = useRef<HTMLParagraphElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const carouselRef = useRef<any>(null);
   
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -82,6 +84,17 @@ const TestimonialsSection = () => {
         observer.unobserve(sectionRef.current);
       }
     };
+  }, []);
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (carouselRef.current?.api) {
+        carouselRef.current.api.scrollNext();
+      }
+    }, 5000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   const renderStars = (rating: number) => {
@@ -130,11 +143,10 @@ const TestimonialsSection = () => {
           </div>
           
           <Carousel
+            ref={carouselRef}
             opts={{ 
               align: "start", 
               loop: true,
-              autoplay: true,
-              interval: 5000
             }}
             className="w-full"
           >
@@ -178,10 +190,16 @@ const TestimonialsSection = () => {
                 aria-label={`Go to testimonial ${index + 1}`}
                 className={cn(
                   "w-3 h-3 rounded-full mx-1 transition-all duration-300",
-                  index === 0  // This would ideally be tied to the current index
+                  index === activeIndex
                     ? "bg-dental-primary w-8" 
                     : "bg-gray-300 hover:bg-dental-secondary"
                 )}
+                onClick={() => {
+                  if (carouselRef.current?.api) {
+                    carouselRef.current.api.scrollTo(index);
+                    setActiveIndex(index);
+                  }
+                }}
               />
             ))}
           </div>

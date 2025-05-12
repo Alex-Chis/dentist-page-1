@@ -27,10 +27,10 @@ const HeroSection = () => {
           backgroundImage:
             "url('https://images.unsplash.com/photo-1606811971618-4486d14f3f99?q=80&w=1974&auto=format&fit=crop')",
           transform: `translateY(${offset}px)`,
-          backgroundPosition: "center 50%",
+          backgroundPosition: "right 50%",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent"></div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
@@ -89,7 +89,7 @@ const HeroSection = () => {
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
             >
-              <span className="relative z-10">Explore Services</span>
+              <span className="relative z-10 text-white">Explore Services</span>
               <span className="absolute inset-0 bg-dental-primary/10 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
             </a>
           </div>

@@ -74,14 +74,14 @@ const HeroSection = () => {
           >
             <a
               href="#booking"
-              className="btn-primary group relative overflow-hidden"
+              className="btn-primary max-w-[250px] group relative overflow-hidden"
             >
               <span className="relative z-10">Book Appointment</span>
               <span className="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
             </a>
             <a
               href="#services"
-              className="btn-secondary group relative overflow-hidden"
+              className="btn-secondary max-w-[250px] group relative overflow-hidden"
               onClick={(e) => {
                 e.preventDefault();
                 document
@@ -106,7 +106,7 @@ const HeroSection = () => {
             ?.scrollIntoView({ behavior: "smooth" });
         }}
       >
-        <div className="flex flex-col items-center">
+        <div className="hidden md:flex flex-col items-center">
           <span className="text-sm font-light mb-2 text-dental-secondary">
             Discover More
           </span>

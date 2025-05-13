@@ -59,13 +59,13 @@ const Header = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed w-full mx-auto z-50 transition-all duration-300",
         isScrolled
           ? "bg-white/90 backdrop-blur-md shadow-lg py-2"
           : "bg-transparent py-4"
       )}
     >
-      <div className="container mx-auto px-4 flex justify-between items-center scroll-smooth">
+      <div className="w-full px-4 flex justify-between">
         <a href="#" className="flex items-center">
           <span
             className={cn(
@@ -138,7 +138,7 @@ const Header = () => {
 
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white/95 backdrop-blur-md px-4 py-5 shadow-lg">
+        <div className="md:hidden bg-white/95 backdrop-blur-md py-5 shadow-lg">
           <nav className="flex flex-col space-y-4">
             {navItems.map((item) => (
               <a
